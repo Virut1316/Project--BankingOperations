@@ -34,7 +34,7 @@ public class Renderer {
 	private static int renderLoginMenu() {
 		System.out.println("\n1.Login");
 		System.out.println("\n2.Apply");
-		System.out.println("\n\n3.Login as employee");
+		System.out.println("\n\n3.Login as employee\n");
 		
 		return 0;
 		
@@ -44,14 +44,14 @@ public class Renderer {
 		System.out.println("\n2.Withdraw");
 		System.out.println("\n3.Deposit");
 		System.out.println("\n4.Transfer");
-		System.out.println("\n\n5.Exit");
+		System.out.println("\n\n5.Exit\n");
 		 
 		return 0;
 	}
 	private static int renderEmployeeMenu() {
 		System.out.println("\n1.Approve accounts");
 		System.out.println("\n2.Account details");
-		System.out.println("\n\n3.Exit");
+		System.out.println("\n\n3.Exit\n");
 		
 		return 0;
 		
@@ -63,7 +63,7 @@ public class Renderer {
 		System.out.println("\n4.Deposit");
 		System.out.println("\n5.Transfer");
 		System.out.println("\n6.Cancel account");
-		System.out.println("\n\n3.Exit");
+		System.out.println("\n\n3.Exit\n");
 		
 		return 0;
 
