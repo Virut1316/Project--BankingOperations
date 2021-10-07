@@ -1,37 +1,9 @@
 package com.revature.view;
 
 public class Renderer {
-
-	
-	public static void renderScreen(String screen) {
 		
-		switch (screen) {
-		case "Login Menu":
-			clear();
-			renderTitle(screen);
-			renderLoginMenu();
-			break;
-
-		case "Main Menu":
-			clear();
-			renderTitle(screen);
-			renderMainMenu();
-			break;
-		case "Employee Menu":
-			clear();
-			renderTitle(screen);
-			renderEmployeeMenu();
-			break;
-		case "Admin Menu":
-			clear();
-			renderTitle(screen);
-			renderAdminMenu();
-			break;
-		}
-		
-		
-	}
-	private static int renderLoginMenu() {
+	public static int renderLoginMenu() {
+		renderTitle("Login Menu");
 		System.out.println("\n1.Login");
 		System.out.println("\n2.Apply");
 		System.out.println("\n\n3.Login as employee\n");
@@ -39,7 +11,8 @@ public class Renderer {
 		return 0;
 		
 	}
-	private static int renderMainMenu() {
+	public static int renderMainMenu() {
+		renderTitle("Main Menu");
 		System.out.println("\n1.View Accounts");
 		System.out.println("\n2.Withdraw");
 		System.out.println("\n3.Deposit");
@@ -48,7 +21,8 @@ public class Renderer {
 		 
 		return 0;
 	}
-	private static int renderEmployeeMenu() {
+	public static int renderEmployeeMenu() {
+		renderTitle("Employee Menu");
 		System.out.println("\n1.Approve accounts");
 		System.out.println("\n2.Account details");
 		System.out.println("\n\n3.Exit\n");
@@ -56,7 +30,8 @@ public class Renderer {
 		return 0;
 		
 	}
-	private static int renderAdminMenu() {
+	public static int renderAdminMenu() {
+		renderTitle("Admin Menu");
 		System.out.println("\n1.Approve accounts");
 		System.out.println("\n2.Account details");
 		System.out.println("\n3.Withdraw");
@@ -69,7 +44,7 @@ public class Renderer {
 
 	}
 	
-	private static void renderTitle(String title) {
+	public static void renderTitle(String title) {
 		System.out.println("+------------------------------+");
 		System.out.println("|                              |");
 		System.out.println("|           RV's Bank          |");
@@ -80,7 +55,7 @@ public class Renderer {
 		System.out.println(" \nWhat do you want to do?");
 	}
 	
-	private static void clear() {
+	public static void clear() {
 		System.out.println("\u000C");
 	}
 }

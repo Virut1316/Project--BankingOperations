@@ -1,3 +1,4 @@
+
 --Employee's data
 INSERT INTO public.employee
 ("admin", username, "password")

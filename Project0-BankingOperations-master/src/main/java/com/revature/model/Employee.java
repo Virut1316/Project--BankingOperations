@@ -5,7 +5,7 @@ public class Employee extends User {
 	private boolean admin;
 	
 	public Employee() {
-		
+		super();
 	}
 	
 	public Employee(boolean admin, String username, String password) {
@@ -41,8 +41,6 @@ public class Employee extends User {
 		return "Employee [admin=" + admin + ", Username=" + getUsername() + ", Password=" + getPassword()+"]";
 	}
 	
-	
-	//Also override WDT methods if necesary to admin
 	
 	
 }

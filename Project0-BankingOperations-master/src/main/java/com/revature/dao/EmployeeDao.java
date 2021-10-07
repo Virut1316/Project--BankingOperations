@@ -3,9 +3,12 @@ package com.revature.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.exceptions.DatabaseConnectionFailedException;
 import com.revature.model.Employee;
 
+import java.net.ConnectException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -21,6 +24,7 @@ public class EmployeeDao implements Dao<Employee>{
 		try {
 		//We get the connection to de db
 		Connection connection = connectionConfig.getConnection();
+		
 		//Create the Query
 		String sql = "Select * from Employee";
 		
@@ -33,7 +37,7 @@ public class EmployeeDao implements Dao<Employee>{
 		}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace(); we need to print this in the logger
 		}
 		
 		return employeeLs;
@@ -41,17 +45,19 @@ public class EmployeeDao implements Dao<Employee>{
 
 	@Override
 	public Employee getElementById(int id) {
-		Employee employee = null;
+		Employee employee = new Employee();
 		
 		try {
 		//We get the connection to de db
 		Connection connection = connectionConfig.getConnection();
 		//Create the Query
-		String sql = "Select * from Employee where employee_id='"+id+"'";
+		String sql = "Select * from Employee where employee_id=?";
+		
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		preparedStatement.setInt(1, id);
 		
 		//Creating a statment from query
-		Statement statement = connection.createStatement();
-		ResultSet rs = statement.executeQuery(sql);
+		ResultSet rs = preparedStatement.executeQuery();
 		
 		while(rs.next()) {
 			employee = new Employee();
@@ -72,17 +78,20 @@ public class EmployeeDao implements Dao<Employee>{
 
 	@Override
 	public Employee getElementByUsername(String username) {
-		Employee employee = null;
+		Employee employee = new Employee();
 		
 		try {
 		//We get the connection to de db
 		Connection connection = connectionConfig.getConnection();
 		//Create the Query
-		String sql = "Select * from Employee where username='"+username+"'";
+		String sql = "Select * from Employee where username=?";
 		
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		preparedStatement.setString(1, username);
+			
 		//Creating a statment from query
-		Statement statement = connection.createStatement();
-		ResultSet rs = statement.executeQuery(sql);
+		ResultSet rs = preparedStatement.executeQuery();
+
 		
 		while(rs.next()) {
 			employee = new Employee();
@@ -93,10 +102,12 @@ public class EmployeeDao implements Dao<Employee>{
 			
 		
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch(Exception e) {
+			e.printStackTrace(); //Need to send this to the loger
 			employee = null;
 		}
+
+		
 		
 		return employee;
 	}

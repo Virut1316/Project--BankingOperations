@@ -43,17 +43,19 @@ public final class ConnectionConfig {
 			database = properties.getProperty("database");
 			username = (String)properties.getProperty("username");
 			password = (String)properties.getProperty("password");
-		} catch(IOException e) {
+		} catch(Exception e) {
+			System.out.print("Database connection failed");
 			e.printStackTrace();
 		}
 		
 		Connection connection;
 		
 		try {
-			connection = DriverManager.getConnection(url+":"+port+"/"+database, username, password); //We get the actual connection and return ir
+			connection = DriverManager.getConnection(url+":"+port+"/"+database, username, password); //We get the actual connection and return it
 			return connection;
-		} catch(SQLException e) {
-			e.printStackTrace();
+		} catch(Exception e) {
+			//System.out.print("Database connection failed");
+			//e.printStackTrace(); print this to the logger
 		}
 		return null; // if we are not able to stablish a connection with the db we return null
 		
