@@ -4,11 +4,25 @@ public class Employee extends User {
 
 	private boolean admin;
 	
-	
 	public Employee() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
+	public Employee(boolean admin, String username, String password) {
+		super(username, password);
+		this.admin = admin;
+	}
+
+	
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
 	public boolean ApproveAccount(){
 		//Logic to approve an account
 		return true;
@@ -21,6 +35,12 @@ public class Employee extends User {
 		//Logic to cancel an account if its admin
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Employee [admin=" + admin + ", Username=" + getUsername() + ", Password=" + getPassword()+"]";
+	}
+	
 	
 	//Also override WDT methods if necesary to admin
 	
