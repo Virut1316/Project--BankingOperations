@@ -24,6 +24,9 @@ public class Main {
         		if(customer!=null)
         		System.out.println("\nWelcome back "+customer.getFirstName()+" "+customer.getLastName());
         		break;
+        	case 2:
+        		SignUpService.signUpWindow();
+        		break;
         	case 3:
         		employee = LoginService.EmployeeLogin();
         		if(employee!=null)

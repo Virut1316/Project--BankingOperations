@@ -113,21 +113,22 @@ public class EmployeeDao implements Dao<Employee>{
 	}
 	
 	@Override
-	public void insertElement(Employee element) {
+	public boolean insertElement(Employee element) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	@Override
-	public void deleteElement(Employee element) {
-		//Not necesary to implement at this project
+	public boolean deleteElement(Employee element) {
 		
+		//Not necesary to implement at this project
+		return false;
 	}
 
 	@Override
-	public void updateElement(Employee element) {
+	public boolean updateElement(Employee element) {
 		//Not necesary to implement at this project
-		
+		return false;
 	}
 
 

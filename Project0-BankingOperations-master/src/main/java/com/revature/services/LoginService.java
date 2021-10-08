@@ -17,9 +17,9 @@ public class LoginService {
 	
 	public static int loginWindow() {
 		
+		sc = new Scanner(System.in);
 		int choice;
 		try {
-			sc = new Scanner(System.in);
 			Renderer.renderLoginMenu();
 			
 			System.out.print("Your selection: ");
@@ -27,6 +27,7 @@ public class LoginService {
 		}catch (InputMismatchException e) {
 			choice = 0;
 		}
+
 		return choice;
 	
 	}
@@ -61,6 +62,7 @@ public class LoginService {
 			customer = null;
 		}
 		
+
 		return customer;
 		
 	}
@@ -95,7 +97,6 @@ public class LoginService {
 			System.out.println(e.getMessage());
 			employee = null;
 		}
-		
 		return employee;
 		
 	}

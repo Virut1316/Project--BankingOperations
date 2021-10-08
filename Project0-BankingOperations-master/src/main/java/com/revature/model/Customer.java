@@ -6,18 +6,16 @@ public class Customer extends User {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String adress;
 	//private List<Account> accounts = Load accounts;
 	
 	public Customer() {
 		super();
 	}
-	public Customer(String firstName, String lastName, String email, String adress,String username, String password) {
+	public Customer(String firstName, String lastName, String email,String username, String password) {
 		super(username,password);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.adress = adress;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -37,13 +35,6 @@ public class Customer extends User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getAdress() {
-		return adress;
-	}
-	public void setAdress(String adress) {
-		this.adress = adress;
-	}
 
-	
 	
 }

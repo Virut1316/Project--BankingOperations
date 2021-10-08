@@ -32,7 +32,7 @@ public class CustomerDao implements Dao<Customer> {
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while (rs.next()) {
-				customer = new Customer(rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7));
+				customer = new Customer(rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
 			}
 			
 		}catch(Exception e){
@@ -59,7 +59,7 @@ public class CustomerDao implements Dao<Customer> {
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while (rs.next()) {
-				customer = new Customer(rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7));
+				customer = new Customer(rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
 			}
 			
 		}catch(Exception e){
@@ -71,21 +71,42 @@ public class CustomerDao implements Dao<Customer> {
 	}
 
 	@Override
-	public void insertElement(Customer element) {
-		// TODO Auto-generated method stub
+	public boolean insertElement(Customer customer) {
 		
+		boolean success = true;
+		try {
+			Connection connection = connectionConfig.getConnection();
+			String sql = "INSERT INTO public.customers(first_name, last_name, email, username, \"password\")"
+					      + "VALUES(?,?,?,?,?);";
+			
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setString(1, customer.getFirstName());
+			preparedStatement.setString(2, customer.getLastName());
+			preparedStatement.setString(3, customer.getEmail());
+			preparedStatement.setString(4, customer.getUsername());
+			preparedStatement.setString(5, customer.getPassword());
+			
+			preparedStatement.execute();
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			success = false;
+		}
+		
+		return success;
 	}
 
 	@Override
-	public void deleteElement(Customer element) {
+	public boolean deleteElement(Customer element) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	@Override
-	public void updateElement(Customer element) {
+	public boolean updateElement(Customer element) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 }

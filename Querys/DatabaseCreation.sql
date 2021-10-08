@@ -4,14 +4,16 @@ create table if not exists Customers (
 	first_name varchar(30) not null,
 	last_name varchar(30) not null,
 	email varchar(50) unique not null,
-	adress text not null,
 	username varchar(10) unique not null,
 	password varchar(20) not null
 );
 
 INSERT INTO public.customers
-(first_name, last_name,email,adress, username, "password")
-VALUES('Alvaro', 'Noboa','anoboa@gmail.com','Spring ln.', 'Alvarito', 'bananas');
+(first_name, last_name,email, username, "password")
+VALUES('Alvaro', 'Noboa','anoboa@gmail.com', 'Alvarito', 'bananas');
+INSERT INTO public.customers
+(first_name, last_name,email, username, "password")
+VALUES('Jaime', 'Nebot','jnebot@gmail.com', 'Jaimito', 'guayaquil');
 
 
 drop table if exists Employee;
