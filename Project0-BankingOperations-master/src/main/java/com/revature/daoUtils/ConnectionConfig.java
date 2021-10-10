@@ -1,10 +1,8 @@
-package com.revature.dao;
+package com.revature.daoUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public final class ConnectionConfig {

@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
+import com.revature.daoUtils.ConnectionConfig;
+import com.revature.daoUtils.Dao;
 import com.revature.model.Customer;
 
 public class CustomerDao implements Dao<Customer> {
@@ -32,7 +34,7 @@ public class CustomerDao implements Dao<Customer> {
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while (rs.next()) {
-				customer = new Customer(rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
+				customer = new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
 			}
 			
 		}catch(Exception e){
@@ -46,7 +48,7 @@ public class CustomerDao implements Dao<Customer> {
 	@Override
 	public Customer getElementByUsername(String username) {
 		
-		Customer customer = new Customer();
+		Customer customer = null;
 		
 		try {
 			Connection connection = connectionConfig.getConnection();
@@ -59,8 +61,11 @@ public class CustomerDao implements Dao<Customer> {
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			while (rs.next()) {
-				customer = new Customer(rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
+				customer = new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
 			}
+			
+			if(customer==null)
+				customer = new Customer();
 			
 		}catch(Exception e){
 			customer=null;
@@ -108,5 +113,6 @@ public class CustomerDao implements Dao<Customer> {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
 
 }

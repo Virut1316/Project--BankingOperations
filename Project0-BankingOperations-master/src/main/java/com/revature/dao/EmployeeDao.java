@@ -3,10 +3,10 @@ package com.revature.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revature.exceptions.DatabaseConnectionFailedException;
+import com.revature.daoUtils.ConnectionConfig;
+import com.revature.daoUtils.Dao;
 import com.revature.model.Employee;
 
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +33,7 @@ public class EmployeeDao implements Dao<Employee>{
 		ResultSet rs = statement.executeQuery(sql);
 		
 		while(rs.next()) {
-			employeeLs.add(new Employee(rs.getBoolean(2),rs.getString(3),rs.getString(4)));
+			employeeLs.add(new Employee(rs.getInt(1),rs.getBoolean(2),rs.getString(3),rs.getString(4)));
 		}
 		}
 		catch (Exception e) {
@@ -45,7 +45,7 @@ public class EmployeeDao implements Dao<Employee>{
 
 	@Override
 	public Employee getElementById(int id) {
-		Employee employee = new Employee();
+		Employee employee = null;
 		
 		try {
 		//We get the connection to de db
@@ -60,17 +60,16 @@ public class EmployeeDao implements Dao<Employee>{
 		ResultSet rs = preparedStatement.executeQuery();
 		
 		while(rs.next()) {
-			employee = new Employee();
-			employee.setAdmin(rs.getBoolean(2));
-			employee.setUsername(rs.getString(3));
-			employee.setPassword(rs.getString(4));
+			employee = new Employee(rs.getInt(1),rs.getBoolean(2),rs.getString(3),rs.getString(4));
 		}
 			
+		if(employee==null) //if it does not retrieve anything then an empty employee is returned
+			employee = new Employee();
 		
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			employee = null;
+			employee = null; //if an exception takes place during execution then a null employee is returned
 		}
 		
 		return employee;
@@ -78,7 +77,7 @@ public class EmployeeDao implements Dao<Employee>{
 
 	@Override
 	public Employee getElementByUsername(String username) {
-		Employee employee = new Employee();
+		Employee employee = null;
 		
 		try {
 		//We get the connection to de db
@@ -94,12 +93,12 @@ public class EmployeeDao implements Dao<Employee>{
 
 		
 		while(rs.next()) {
-			employee = new Employee();
-			employee.setAdmin(rs.getBoolean(2));
-			employee.setUsername(rs.getString(3));
-			employee.setPassword(rs.getString(4));
+			employee = new Employee(rs.getInt(1),rs.getBoolean(2),rs.getString(3),rs.getString(4));
 		}
 			
+		if(employee==null) //if it does not retrieve anything then an empty employee is returned
+			employee = new Employee();
+		
 		
 		}
 		catch(Exception e) {

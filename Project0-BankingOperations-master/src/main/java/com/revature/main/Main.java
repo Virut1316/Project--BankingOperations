@@ -15,14 +15,12 @@ public class Main {
     	Employee employee=null;//Starts with an unlogged user
     	Customer customer=null;//Starts with an unlogged user
     	boolean finish = false;
-    	
     	while(!finish) {
-        	switch (LoginService.loginWindow())
+			Renderer.renderLoginMenu();
+        	switch (OptionInput.choiceCatcher())
         	{
         	case 1:
         		customer = LoginService.CustomerLogin();
-        		if(customer!=null)
-        		System.out.println("\nWelcome back "+customer.getFirstName()+" "+customer.getLastName());
         		break;
         	case 2:
         		SignUpService.signUpWindow();
@@ -32,22 +30,66 @@ public class Main {
         		if(employee!=null)
         		System.out.println("\nWelcome back "+employee.getUsername());
         		break;
+        	case 4:
+        		finish=true;
+        		break;
         	default:
         		System.out.println("\nPlease select a valid option, pick the number of the option you want to choose");
+        		Renderer.waitForInput();
         		break;
         	}
         	
-        	if(customer!=null) {
-        		Renderer.renderMainMenu();
-        		finish=true;;
+        	if (customer!=null) {
+        		if(!CustomerOperationsService.checkActive(customer.getId())) {
+        			finish=true;
+        		}
+        		while(!finish) {
+        			System.out.println("\nWelcome back "+customer.getFirstName()+" "+customer.getLastName());
+        			Renderer.renderMainMenu();
+        			switch (OptionInput.choiceCatcher()) {
+					case 1:
+						CustomerOperationsService.ViewAccounts(customer.getId());
+						break;
+					case 2:
+						CustomerOperationsService.WithdrawFromAccount();
+						break;
+					case 3:
+						
+						break;
+					case 4:
+						
+						break;
+					case 5:
+						finish=true;
+		        		customer = null;
+						break;
+		        	default:
+		        		System.out.println("\nPlease select a valid option, pick the number of the option you want to choose");
+		        		break;
+					}
+        			
+        			
+        		}
+        		finish = false;
+    			//System.out.print("User logged out"); logger
         	}
         	else if(employee!=null) {
         		Renderer.renderEmployeeMenu();
-        		finish=true;;
+        		while(!finish) {
+        			
+        			
+        			
+        			
+        		}
+        		finish=false;
+        		employee = null;
         	}
+        	
+        	
         		
     	} 	
-        
+		System.out.println("\nSee you soon!");
+
     }
 
 

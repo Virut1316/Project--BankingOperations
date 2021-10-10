@@ -15,22 +15,7 @@ import com.revature.view.Renderer;
 public class LoginService {
 	private static Scanner sc;
 	
-	public static int loginWindow() {
-		
-		sc = new Scanner(System.in);
-		int choice;
-		try {
-			Renderer.renderLoginMenu();
-			
-			System.out.print("Your selection: ");
-			choice = sc.nextInt();
-		}catch (InputMismatchException e) {
-			choice = 0;
-		}
 
-		return choice;
-	
-	}
 	
 	public static Customer CustomerLogin() {
 		
@@ -52,17 +37,17 @@ public class LoginService {
 			throw new UserNotFoundException();
 		}	
 		else if (customer.getPassword().equals(password)) {
-			System.out.print("\nUser logged in sucessfully");
+			//System.out.print("\nUser logged in sucessfully");  //Print on logger attempt to log in
 		}
 		else
 			throw new IncorrectPasswordException();
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
+			Renderer.waitForInput();
 			customer = null;
 		}
 		
-
 		return customer;
 		
 	}
@@ -88,15 +73,17 @@ public class LoginService {
 			throw new UserNotFoundException();
 		}	
 		else if (employee.getPassword().equals(password)) {
-			System.out.print("\nUser logged in sucessfully");
+			//System.out.print("\nUser logged in sucessfully");  //Print on logger attempt to log in
 		}
 		else
 			throw new IncorrectPasswordException();
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
+			Renderer.waitForInput();
 			employee = null;
 		}
+		
 		return employee;
 		
 	}

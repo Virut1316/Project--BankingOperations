@@ -3,20 +3,40 @@ package com.revature.model;
 
 public class Account {
 	
-	private String accountNumber;
+	private int accountNumber;
+	private boolean active;
 	private int balance;
 	
-	public Account(String accountNumber, int balance) {
+	public Account(int accountNumber,boolean active, int balance) {
 		this.accountNumber = accountNumber;
+		this.active = active;
 		this.balance = balance;
 	}
 
 
 
-	public String getAccountNumber() {
+	public Account() {
+		//Called when no elements where found
+	}
+
+
+
+	public boolean isActive() {
+		return active;
+	}
+
+
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+
+
+	public int getAccountNumber() {
 		return accountNumber;
 	}
-	public void setAccountNumber(String accountNumber) {
+	public void setAccountNumber(int accountNumber) {
 		this.accountNumber = accountNumber;
 	}
 	public int getBalance() {
