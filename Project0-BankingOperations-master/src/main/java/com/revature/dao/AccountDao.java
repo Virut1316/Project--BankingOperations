@@ -20,7 +20,7 @@ public class AccountDao implements AccountDaoInterface{
 	@Override
 	public List<Account> getAllAccounts() {
 		List<Account> accounts = new ArrayList<Account>();
-
+		
 		try {
 			Connection connection = connectionConfig.getConnection();
 			String sql = "Select * from account";
@@ -32,6 +32,8 @@ public class AccountDao implements AccountDaoInterface{
 			
 			while(rs.next())
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
+			
+			connection.close();
 			
 		} catch (Exception e) {
 			// print in logger
@@ -60,6 +62,7 @@ public class AccountDao implements AccountDaoInterface{
 			while(rs.next())
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
+			connection.close();
 		} catch (Exception e) {
 			// print in logger
 			accounts = null;
@@ -69,6 +72,57 @@ public class AccountDao implements AccountDaoInterface{
 
 	}
 
+	@Override
+	public List<Account> getAllActiveAccounts() {
+		List<Account> accounts = new ArrayList<Account>();
+
+		try {
+			Connection connection = connectionConfig.getConnection();
+			String sql = "Select * from account where active=true";
+			
+			
+			Statement statement = connection.createStatement();
+			
+			ResultSet rs = statement.executeQuery(sql);			
+			
+			while(rs.next())
+				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
+			
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);// print in logger
+			e.printStackTrace();
+			accounts = null;
+		}
+		
+		return accounts;
+	}
+
+	@Override
+	public List<Account> getAllInactiveAccounts() {
+		List<Account> accounts = new ArrayList<Account>();
+
+		try {
+			Connection connection = connectionConfig.getConnection();
+			String sql = "Select * from account where active=false";
+			
+			
+			Statement statement = connection.createStatement();
+			
+			ResultSet rs = statement.executeQuery(sql);			
+			
+			while(rs.next())
+				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
+			
+			connection.close();
+		} catch (Exception e) {
+			System.out.println(e);// print in logger
+			e.printStackTrace();
+			accounts = null;
+		}
+		
+		return accounts;
+	}
 	@Override
 	public List<Account> getAllActiveAccounts(int idCustomer) {
 		List<Account> accounts = new ArrayList<Account>();
@@ -88,6 +142,7 @@ public class AccountDao implements AccountDaoInterface{
 			while(rs.next())
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
+			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);// print in logger
 			e.printStackTrace();
@@ -114,6 +169,7 @@ public class AccountDao implements AccountDaoInterface{
 			while(rs.next())
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
+			connection.close();
 		} catch (Exception e) {
 			// print in logger
 			accounts = null;
@@ -135,7 +191,7 @@ public class AccountDao implements AccountDaoInterface{
 			
 			preparedstatement.executeQuery();			
 			
-			
+			connection.close();
 		} catch (Exception e) {
 			// print in logger
 			successfull = false;
@@ -159,7 +215,7 @@ public class AccountDao implements AccountDaoInterface{
 			
 			preparedstatement.executeQuery();			
 			
-			
+			connection.close();
 		} catch (Exception e) {
 			// print in logger
 			successfull = false;
@@ -183,7 +239,7 @@ public class AccountDao implements AccountDaoInterface{
 			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();			
 			
-			
+			connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();// print in logger
 			successfull = false;
@@ -191,6 +247,7 @@ public class AccountDao implements AccountDaoInterface{
 		return successfull;
 	}
 	
+	@Override
 	public Customer getOwner(int idAccount) {
 		Customer customer = new Customer();
 
@@ -208,6 +265,7 @@ public class AccountDao implements AccountDaoInterface{
 			while(rs.next())
 				customer = new Customer(rs.getInt(2),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10));
 			
+			connection.close();
 		} catch (Exception e) {
 			// print in logger
 			customer = null;
@@ -215,6 +273,7 @@ public class AccountDao implements AccountDaoInterface{
 		return customer;
 	}
 	
+	@Override
 	public Account getAccount(int idAccount) {
 		Account account = null;
 		
@@ -233,6 +292,7 @@ public class AccountDao implements AccountDaoInterface{
 			if(account==null)
 				account = new Account();
 			
+			connection.close();
 		}catch(Exception e){
 			//logger
 			account = null;
@@ -241,6 +301,7 @@ public class AccountDao implements AccountDaoInterface{
 		return account;
 	}
 	
+	@Override
 	public Account getAccountFromCustomer(int idAccount, int idCustomer) {
 		Account account = null;
 		
@@ -260,6 +321,8 @@ public class AccountDao implements AccountDaoInterface{
 			if(account==null)
 				account = new Account();
 			
+			
+			connection.close();
 		}catch(Exception e){
 			//logger
 			account = null;
@@ -289,6 +352,7 @@ public class AccountDao implements AccountDaoInterface{
 		
 		return success;
 	}*/
+	
 	
 	public boolean transfer(Account sender, Account receiver) {
 		boolean successfull = true;
@@ -323,6 +387,7 @@ public class AccountDao implements AccountDaoInterface{
 			connection.commit(); // Commit to apply changes
 			connection.setAutoCommit(true); //going back to the default mode
 			
+			connection.close();
 		} catch (Exception e) {
 			e.printStackTrace();// print in logger
 			successfull = false;

@@ -8,6 +8,7 @@ import java.util.Scanner;
 import com.revature.dao.AccountDao;
 import com.revature.exceptions.AccountDoesNotExistsException;
 import com.revature.exceptions.AccountNotActiveException;
+import com.revature.exceptions.ActiveAccountsNotAvailableException;
 import com.revature.exceptions.DatabaseConnectionFailedException;
 import com.revature.exceptions.IncorrectMoneyFormatException;
 import com.revature.exceptions.NotEnoughFoundsException;
@@ -31,8 +32,18 @@ public class CustomerOperationsService {
 			else if(activeAccounts.size()==0)
 				throw new AccountNotActiveException();
 			
-		}catch (Exception e) {
+		}catch (DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			active = false;
+			Renderer.waitForInput();
+		}
+		catch (AccountNotActiveException e) {
+			System.out.println(e.getMessage());
+			active = false;
+			Renderer.waitForInput();
+		}
+		catch (Exception e) {
+			// System.out.println(e.getMessage()); logger
 			active = false;
 			Renderer.waitForInput();
 		}
@@ -52,13 +63,19 @@ public class CustomerOperationsService {
 			if(accounts == null)
 				throw new DatabaseConnectionFailedException();
 			else if (accounts.size()==0)
-				throw new AccountNotActiveException();
+				throw new ActiveAccountsNotAvailableException();
 				
 			for(Account account: accounts) {
 				Renderer.renderAccount(account);
 			}
 		
-		}catch(Exception e) {
+		}catch(DatabaseConnectionFailedException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(ActiveAccountsNotAvailableException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(Exception e) {
 			//logger
 		}
 		Renderer.waitForInput();
@@ -78,13 +95,14 @@ public class CustomerOperationsService {
 			
 		
 		Account account = accountDao.getAccountFromCustomer(idAccount,idCustomer);
+
 		if(account==null)
 			throw new DatabaseConnectionFailedException();
 		else if(account.getAccountNumber()==0)
 			throw new AccountDoesNotExistsException();
-		else if (account.isActive())
+		else if (!account.isActive())
 			throw new TargetAccountNotAvailableException();
-		
+
 		if((account.getBalance()-moneyInt)>=0) {
 			success = accountDao.updateAccount(new Account(idAccount, account.isActive(), account.getBalance()-moneyInt));
 		}
@@ -105,7 +123,7 @@ public class CustomerOperationsService {
 			System.out.println("Input data does not correspond to fields");
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());//logger
+			//System.out.println(e.getMessage());//logger
 		}
 		
 		Renderer.waitForInput();
@@ -175,7 +193,7 @@ public class CustomerOperationsService {
 			System.out.println(e.getMessage());
 		}
 		catch(Exception e) {
-			e.printStackTrace();//logger
+			//e.printStackTrace();//logger
 		}
 		
 		Renderer.waitForInput();
@@ -199,7 +217,7 @@ public static void DepositToAccount(int idCustomer) {
 			throw new DatabaseConnectionFailedException();
 		else if(account.getAccountNumber()==0)
 			throw new AccountDoesNotExistsException();
-		else if (account.isActive())
+		else if (!account.isActive())
 			throw new TargetAccountNotAvailableException();
 		
 			success = accountDao.updateAccount(new Account(idAccount, account.isActive(), account.getBalance()+moneyInt));
@@ -218,7 +236,7 @@ public static void DepositToAccount(int idCustomer) {
 			System.out.println("Input data does not correspond to fields");
 		}
 		catch(Exception e) {
-			System.out.println(e.getMessage());//logger
+			//System.out.println(e.getMessage());//logger
 		}
 		
 		Renderer.waitForInput();

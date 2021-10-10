@@ -36,6 +36,7 @@ public class CustomerDao implements Dao<Customer> {
 			while (rs.next()) {
 				customer = new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
 			}
+			connection.close();
 			
 		}catch(Exception e){
 			customer=null;
@@ -52,7 +53,7 @@ public class CustomerDao implements Dao<Customer> {
 		
 		try {
 			Connection connection = connectionConfig.getConnection();
-			
+			username = username.trim();
 			String sql = "Select * from customers where username = ?";
 			
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -67,6 +68,7 @@ public class CustomerDao implements Dao<Customer> {
 			if(customer==null)
 				customer = new Customer();
 			
+			connection.close();
 		}catch(Exception e){
 			customer=null;
 			System.out.println(e);
@@ -94,6 +96,7 @@ public class CustomerDao implements Dao<Customer> {
 			
 			preparedStatement.execute();
 			
+			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);
 			success = false;

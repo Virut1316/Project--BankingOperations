@@ -35,6 +35,7 @@ public class EmployeeDao implements Dao<Employee>{
 		while(rs.next()) {
 			employeeLs.add(new Employee(rs.getInt(1),rs.getBoolean(2),rs.getString(3),rs.getString(4)));
 		}
+		connection.close();
 		}
 		catch (Exception e) {
 			//e.printStackTrace(); we need to print this in the logger
@@ -65,7 +66,7 @@ public class EmployeeDao implements Dao<Employee>{
 			
 		if(employee==null) //if it does not retrieve anything then an empty employee is returned
 			employee = new Employee();
-		
+		connection.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -99,6 +100,7 @@ public class EmployeeDao implements Dao<Employee>{
 		if(employee==null) //if it does not retrieve anything then an empty employee is returned
 			employee = new Employee();
 		
+		connection.close();
 		
 		}
 		catch(Exception e) {

@@ -73,16 +73,42 @@ public class Main {
         		finish = false;
     			//System.out.print("User logged out"); logger
         	}
-        	else if(employee!=null) {
-        		Renderer.renderEmployeeMenu();
+        	else if(employee!=null&&!employee.isAdmin()) { // Selection of a employee
         		while(!finish) {
+            		Renderer.renderEmployeeMenu();
+
+        			switch (OptionInput.choiceCatcher()) {
+					case 1:
+						
+						break;
+					
+					case 2:
+						EmployeeService.viewAccount();
+						break;
+					case 3:
+						EmployeeService.viewAllActiveAccounts();
+						break;
+					case 4:
+						EmployeeService.viewAllInactiveAccounts();
+						break;
+					case 5:
+						finish = true;
+						employee =null;
+						break;
+					default:
+		        		System.out.println("\nPlease select a valid option, pick the number of the option you want to choose");
+		        		break;
+					}
         			
         			
         			
         			
         		}
         		finish=false;
-        		employee = null;
+        	}
+        	else if(employee!=null&&employee.isAdmin()) { //Selection of a logged admin
+        		
+        		
         	}
         	
         	

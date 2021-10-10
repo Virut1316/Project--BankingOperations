@@ -18,6 +18,9 @@ public class OptionInput {
 			choice = sc.nextInt();
 		}catch (InputMismatchException e) {
 			choice = 0;
+		}catch (Exception e) {
+			//e.getStackTrace(); logger
+			choice = 0;
 		}
 
 		return choice;

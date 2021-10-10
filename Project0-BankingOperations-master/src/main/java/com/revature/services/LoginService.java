@@ -24,6 +24,7 @@ public class LoginService {
 		System.out.print("\nInput your username and password: ");
 		System.out.print("\nUsername: ");
 		username=sc.nextLine();
+		username = username.trim();
 		System.out.print("Password: ");
 		password=sc.nextLine();
 		
@@ -42,8 +43,28 @@ public class LoginService {
 		else
 			throw new IncorrectPasswordException();
 		}
+		catch (DatabaseConnectionFailedException e) {
+			System.out.println(e.getMessage());
+			Renderer.waitForInput();
+			customer = null;
+		}
+		catch (UserNotFoundException e) {
+			System.out.println(e.getMessage());
+			Renderer.waitForInput();
+			customer = null;
+		}
+		catch (IncorrectPasswordException e) {
+			System.out.println(e.getMessage());
+			Renderer.waitForInput();
+			customer = null;
+		}
+		catch(InputMismatchException e) {
+			System.out.println("Input data does not correspond to fields");
+			Renderer.waitForInput();
+		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
+			//e.printStackTrace(); Logger
 			Renderer.waitForInput();
 			customer = null;
 		}
@@ -59,6 +80,7 @@ public class LoginService {
 		System.out.print("\nInput your username and password: ");
 		System.out.print("\nUsername: ");
 		username=sc.nextLine();
+		username = username.trim();
 		System.out.print("Password: ");
 		password=sc.nextLine();
 		
@@ -78,8 +100,28 @@ public class LoginService {
 		else
 			throw new IncorrectPasswordException();
 		}
+		catch (DatabaseConnectionFailedException e) {
+			System.out.println(e.getMessage());
+			Renderer.waitForInput();
+			employee = null;
+		}
+		catch(InputMismatchException e) {
+			System.out.println("Input data does not correspond to fields");
+			Renderer.waitForInput();
+		}
+		catch (UserNotFoundException e) {
+			System.out.println(e.getMessage());
+			Renderer.waitForInput();
+			employee = null;
+		}
+		catch (IncorrectPasswordException e) {
+			System.out.println(e.getMessage());
+			Renderer.waitForInput();
+			employee = null;
+		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
+			//e.printStackTrace(); Logger
 			Renderer.waitForInput();
 			employee = null;
 		}

@@ -33,7 +33,9 @@ public class Renderer {
 		renderTitle("Employee Menu");
 		System.out.println("\n1.Approve accounts");
 		System.out.println("\n2.Account details");
-		System.out.println("\n\n3.Exit\n");
+		System.out.println("\n3.View all active accounts");
+		System.out.println("\n4.View all inactive accounts");
+		System.out.println("\n\n5.Exit\n");
 		
 		
 	}
@@ -41,11 +43,13 @@ public class Renderer {
 		renderTitle("Admin Menu");
 		System.out.println("\n1.Approve accounts");
 		System.out.println("\n2.Account details");
-		System.out.println("\n3.Withdraw");
-		System.out.println("\n4.Deposit");
-		System.out.println("\n5.Transfer");
-		System.out.println("\n6.Cancel account");
-		System.out.println("\n\n3.Exit\n");
+		System.out.println("\n3.View all active accounts");
+		System.out.println("\n4.View all inactive accounts");
+		System.out.println("\n5.Withdraw");
+		System.out.println("\n6.Deposit");
+		System.out.println("\n7.Transfer");
+		System.out.println("\n8.Cancel account");
+		System.out.println("\n\n9.Exit\n");
 
 	}
 	
