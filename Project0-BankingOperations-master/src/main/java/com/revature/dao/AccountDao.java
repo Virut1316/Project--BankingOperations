@@ -1,6 +1,8 @@
 package com.revature.dao;
 
 import com.revature.model.*;
+import com.revature.view.Renderer;
+
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -239,5 +241,93 @@ public class AccountDao implements AccountDaoInterface{
 		return account;
 	}
 	
+	public Account getAccountFromCustomer(int idAccount, int idCustomer) {
+		Account account = null;
+		
+		try {
+			Connection connection = connectionConfig.getConnection();
+			String sql = "Select * from account where account_id=? AND customer_id=?";
+			
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, idAccount);
+			preparedStatement.setInt(2, idCustomer);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			while(rs.next())
+				account = new Account(rs.getInt(1), rs.getBoolean(3), rs.getInt(4));
+			
+			if(account==null)
+				account = new Account();
+			
+		}catch(Exception e){
+			//logger
+			account = null;
+		}
+		
+		return account;
+	}
+	
+	
+	/*public boolean transfer(Account sender, Account receiver) {
+		boolean success;
+		try {
+			Connection connection = connectionConfig.getConnection();
+			connection.setAutoCommit(false); //Set this to disable commits to the database until called
+			updateAccount(sender);
+			Renderer.waitForInput();
+			updateAccount(receiver);
+			connection.commit(); // we call a commit so all the changes are "saved" on the DB
+			connection.setAutoCommit(true); //we leave the autocommit in true to not affect other functionalities
+			
+			success = true;
+			
+		}catch(Exception e) {
+			success = false;
+		}
+		
+		
+		return success;
+	}*/
+	
+	public boolean transfer(Account sender, Account receiver) {
+		boolean successfull = true;
+		
+		try {
+			Connection connection = connectionConfig.getConnection();
+			connection.setAutoCommit(false); //Disabling the autocommit mode to wait until callin it
+			
+			//FirstPart, sustract from sender
+			String sql = "UPDATE public.account SET active=?, balance=? WHERE account_id=?";
+			
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setBoolean(1, sender.isActive());
+			preparedStatement.setInt(2, sender.getBalance());
+			preparedStatement.setInt(3, sender.getAccountNumber());
+			
+			System.out.println(preparedStatement);
+			preparedStatement.executeUpdate();			
+			Renderer.waitForInput();
+
+			//Second parte adding to receiver
+			
+			PreparedStatement preparedStatement2 = connection.prepareStatement(sql);
+			preparedStatement2.setBoolean(1, receiver.isActive());
+			preparedStatement2.setInt(2, receiver.getBalance());
+			preparedStatement2.setInt(3, receiver.getAccountNumber());
+			
+			System.out.println(preparedStatement2);
+			preparedStatement2.executeUpdate();	
+			Renderer.waitForInput();
+
+			connection.commit(); // Commit to apply changes
+			connection.setAutoCommit(true); //going back to the default mode
+			
+		} catch (Exception e) {
+			e.printStackTrace();// print in logger
+			successfull = false;
+		}
+		return successfull;
+}
 	
 }

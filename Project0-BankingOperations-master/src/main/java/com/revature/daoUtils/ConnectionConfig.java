@@ -9,6 +9,7 @@ public final class ConnectionConfig {
 	
 	private static ConnectionConfig connection;
 	private static Properties properties = new Properties();
+	private static Connection connectionI;
 	
 	private ConnectionConfig() {
 		//The new instance can only be created from inside, because is a Singleton and it happens once
@@ -28,6 +29,10 @@ public final class ConnectionConfig {
 	
 	public Connection getConnection() {
 		
+		
+		if(connection!=null) {
+			
+
 		//We create a inputStream and take the .properties to read the parameters
 		ClassLoader classLoader = getClass().getClassLoader();
 		InputStream InputStream = classLoader.getResourceAsStream("jdbc.properties");
@@ -46,16 +51,18 @@ public final class ConnectionConfig {
 			e.printStackTrace();
 		}
 		
-		Connection connection;
 		
 		try {
-			connection = DriverManager.getConnection(url+":"+port+"/"+database, username, password); //We get the actual connection and return it
-			return connection;
+			connectionI = DriverManager.getConnection(url+":"+port+"/"+database, username, password); //We get the actual connection and return it
+			return connectionI;
 		} catch(Exception e) {
 			//System.out.print("Database connection failed");
 			//e.printStackTrace(); print this to the logger
 		}
 		return null; // if we are not able to stablish a connection with the db we return null
+		}
+		else 
+			return connectionI;
 		
 	}
 	

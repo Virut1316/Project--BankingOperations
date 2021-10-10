@@ -51,13 +51,13 @@ public class Main {
 						CustomerOperationsService.ViewAccounts(customer.getId());
 						break;
 					case 2:
-						CustomerOperationsService.WithdrawFromAccount();
+						CustomerOperationsService.withdrawFromAccount(customer.getId());
 						break;
 					case 3:
-						
+						CustomerOperationsService.DepositToAccount(customer.getId());
 						break;
 					case 4:
-						
+						CustomerOperationsService.transferToAccount(customer.getId());
 						break;
 					case 5:
 						finish=true;
