@@ -79,7 +79,7 @@ public class Main {
 
         			switch (OptionInput.choiceCatcher()) {
 					case 1:
-						
+						EmployeeService.ApproveAccount();
 						break;
 					
 					case 2:
