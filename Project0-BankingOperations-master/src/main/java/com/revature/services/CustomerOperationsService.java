@@ -90,7 +90,7 @@ public class CustomerOperationsService {
 		try {
 		System.out.print("Account number: ");
 		int idAccount = sc.nextInt();
-		System.out.print("Money to withdraw: ");
+		System.out.print("Amount to withdraw: ");
 		int moneyInt = formatMoney(sc.next());
 			
 		
@@ -114,9 +114,17 @@ public class CustomerOperationsService {
 		}
 		else
 			System.out.println("Operation failed, please try again later");
-
-			
+		
+		}catch(DatabaseConnectionFailedException e) {
+			System.out.println(e.getMessage());
+		}catch(AccountDoesNotExistsException e) {
+			System.out.println(e.getMessage());
+		}catch(TargetAccountNotAvailableException e) {
+			System.out.println(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(NotEnoughFoundsException e) {
 			System.out.println(e.getMessage());
 		}
 		catch(InputMismatchException e) {
@@ -155,8 +163,9 @@ public class CustomerOperationsService {
 			throw new DatabaseConnectionFailedException();
 		else if(senderAccount.getAccountNumber()==0)
 			throw new AccountDoesNotExistsException();
+		else if (!senderAccount.isActive())
+			throw new TargetAccountNotAvailableException();
 		
-		System.out.print(senderAccount.getAccountNumber());
 		Account receiverAccount = accountDao.getAccount(idReceiverAccount);
 		if(receiverAccount==null)
 			throw new DatabaseConnectionFailedException();
@@ -164,7 +173,7 @@ public class CustomerOperationsService {
 			throw new AccountDoesNotExistsException();
 		else if (!receiverAccount.isActive())
 			throw new TargetAccountNotAvailableException();
-		System.out.print(receiverAccount.getAccountNumber());
+		
 		
 	    // Example in https://docs.oracle.com/javase/tutorial/jdbc/basics/transactions.html for transaction in Java
 		if((senderAccount.getBalance()-moneyInt)>=0) {		
@@ -183,17 +192,23 @@ public class CustomerOperationsService {
 			System.out.println("Operation failed, please try again later");
 
 			
+		}catch(DatabaseConnectionFailedException e) {
+			System.out.println(e.getMessage());
+		}catch(AccountDoesNotExistsException e) {
+			System.out.println(e.getMessage());
+		}catch(TargetAccountNotAvailableException e) {
+			System.out.println(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(NotEnoughFoundsException e) {
 			System.out.println(e.getMessage());
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
 		}
-		catch(AccountDoesNotExistsException e) {
-			System.out.println(e.getMessage());
-		}
 		catch(Exception e) {
-			//e.printStackTrace();//logger
+			//System.out.println(e.getMessage());//logger
 		}
 		
 		Renderer.waitForInput();
@@ -229,7 +244,16 @@ public static void DepositToAccount(int idCustomer) {
 			System.out.println("Operation failed, please try again later");
 
 			
+		}catch(DatabaseConnectionFailedException e) {
+			System.out.println(e.getMessage());
+		}catch(AccountDoesNotExistsException e) {
+			System.out.println(e.getMessage());
+		}catch(TargetAccountNotAvailableException e) {
+			System.out.println(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(NotEnoughFoundsException e) {
 			System.out.println(e.getMessage());
 		}
 		catch(InputMismatchException e) {

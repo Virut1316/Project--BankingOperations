@@ -101,14 +101,50 @@ public class Main {
 					}
         			
         			
-        			
-        			
         		}
         		finish=false;
         	}
         	else if(employee!=null&&employee.isAdmin()) { //Selection of a logged admin
-        		
-        		
+        		while(!finish) {
+            		Renderer.renderAdminMenu();
+
+        			switch (OptionInput.choiceCatcher()) {
+					case 1:
+						EmployeeService.ApproveAccount();
+						break;
+					case 2:
+						EmployeeService.viewAccount();
+						break;
+					case 3:
+						EmployeeService.viewAllActiveAccounts();
+						break;
+					case 4:
+						EmployeeService.viewAllInactiveAccounts();
+						break;
+					case 5:
+						EmployeeService.adminWithdraw();
+						break;
+					case 6:
+						EmployeeService.adminDeposit();
+						break;
+					case 7:
+						EmployeeService.adminTransfer();
+						break;
+					case 8:
+						EmployeeService.adminCancel();
+						break;
+					case 9:
+						finish = true;
+						employee =null;
+						break;
+					default:
+		        		System.out.println("\nPlease select a valid option, pick the number of the option you want to choose");
+		        		break;
+					}
+        			
+        			
+        		}
+        		finish=false;	
         	}
         	
         	

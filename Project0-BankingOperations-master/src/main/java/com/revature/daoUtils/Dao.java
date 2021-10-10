@@ -9,6 +9,6 @@ public interface Dao<T> {
 	T getElementById(int id);
 	T getElementByUsername(String username);
 	boolean insertElement(T element);
-	boolean deleteElement(T element);
+	boolean deleteElement(int id);
 	boolean updateElement(T element);
 }

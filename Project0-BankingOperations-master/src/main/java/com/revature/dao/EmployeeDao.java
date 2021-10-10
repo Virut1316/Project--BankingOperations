@@ -120,7 +120,7 @@ public class EmployeeDao implements Dao<Employee>{
 	}
 
 	@Override
-	public boolean deleteElement(Employee element) {
+	public boolean deleteElement(int id) {
 		
 		//Not necesary to implement at this project
 		return false;

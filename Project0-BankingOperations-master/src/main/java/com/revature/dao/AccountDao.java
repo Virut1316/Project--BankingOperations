@@ -189,7 +189,7 @@ public class AccountDao implements AccountDaoInterface{
 			PreparedStatement preparedstatement = connection.prepareStatement(sql);
 			preparedstatement.setInt(1, idCustomer);
 			
-			preparedstatement.executeQuery();			
+			preparedstatement.executeUpdate();			
 			
 			connection.close();
 		} catch (Exception e) {

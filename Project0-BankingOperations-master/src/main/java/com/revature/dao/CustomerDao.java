@@ -98,7 +98,8 @@ public class CustomerDao implements Dao<Customer> {
 			
 			connection.close();
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Problem reaching database, try again later");
+			//System.out.println(e); logger
 			success = false;
 		}
 		
@@ -106,9 +107,29 @@ public class CustomerDao implements Dao<Customer> {
 	}
 
 	@Override
-	public boolean deleteElement(Customer element) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteElement(int id) {
+		
+		boolean success = true;
+		try {
+			Connection connection = connectionConfig.getConnection();
+			String sql = "DELETE FROM customers "
+					+ "WHERE customer_id = ?;";
+			
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setInt(1, id);
+
+			preparedStatement.executeUpdate();
+			
+			connection.close();
+		} catch (Exception e) {
+			System.out.println("Problem reaching database, try again later");
+			//System.out.println(e); logger
+			success = false;
+		}
+		
+		return success;
+
 	}
 
 	@Override
