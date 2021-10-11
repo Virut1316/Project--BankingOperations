@@ -13,6 +13,7 @@ import com.revature.exceptions.DatabaseConnectionFailedException;
 import com.revature.exceptions.IncorrectMoneyFormatException;
 import com.revature.exceptions.NotEnoughFoundsException;
 import com.revature.exceptions.TargetAccountNotAvailableException;
+import com.revature.exceptions.UserNotFoundException;
 import com.revature.model.Account;
 import com.revature.model.Customer;
 import com.revature.view.Renderer;
@@ -21,7 +22,7 @@ public class EmployeeService {
 
 	private static Scanner sc;
 	
-public static void ApproveAccount() {
+public static void ApproveDenyAccount() {
 		
 		AccountDao accounDao = new AccountDao();
 		sc = new Scanner(System.in);
@@ -29,7 +30,7 @@ public static void ApproveAccount() {
 		
 		try {
 		
-		System.out.print("Account number to approve: ");
+		System.out.print("Account number to approve or deny: ");
 		int accountId = sc.nextInt();
 			
 		Account account = accounDao.getAccount(accountId);
@@ -41,15 +42,40 @@ public static void ApproveAccount() {
 		else if (account.isActive())
 			throw new AccountAlreadyActiveException();
 		
-		System.out.println("This account is going to be activated ");
+		System.out.println("What do want to do with this account? ");
 		Renderer.renderAccount(account);
-		System.out.print("Proceed? (Y/n): ");
+		System.out.print("Approve(A) or Deny(D): ");
 		choice = sc.next();
+		choice = choice.trim();
 		
-		if(choice.equals("Y")||choice.equals("y"))
-			accounDao.updateAccount(new Account(account.getAccountNumber(),true,account.getBalance()));
-		else 
+		
+		if(choice.equals("A")||choice.equals("a")) {
+			System.out.println("This account is going to be activated ");
+			System.out.print("Proceed? (Y/n): ");
+			choice = sc.next();
+			choice = choice.trim();
+			
+			if(choice.equals("Y")||choice.equals("y")) {
+				accounDao.updateAccount(new Account(account.getAccountNumber(),true,account.getBalance()));
+				System.out.println("Account successfully approved");
+			}
+			else 
+				System.out.println("Operation cancelled");
+		}else if (choice.equals("D")||choice.equals("d")) {
+			System.out.println("This account is going to be denied ");
+			System.out.print("Proceed? (Y/n): ");
+			choice = sc.next();
+			choice = choice.trim();
+			if(choice.equals("Y")||choice.equals("y")) {
+				accounDao.deleteAccount(account.getAccountNumber());
+				System.out.println("Account successfully denied");
+			}
+			else 
+				System.out.println("Operation cancelled");
+		}
+		else
 			System.out.println("Operation cancelled");
+		
 		
 		
 		}catch (DatabaseConnectionFailedException e) {
@@ -95,6 +121,40 @@ public static void ApproveAccount() {
 			System.out.println("Input data does not correspond to fields");
 		}
 		catch (AccountDoesNotExistsException e) {
+			System.out.println(e.getMessage());
+		} 
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			//e.getStackTrace() logger
+		}
+		Renderer.waitForInput();
+		
+	}
+	
+	public static void viewCustomer() {
+		
+		CustomerDao customerDao = new CustomerDao();
+		sc = new Scanner(System.in);
+		try {
+		
+		System.out.print("Insert username to see details: ");
+		String username = sc.next();
+		username = username.trim();
+		Customer customer = customerDao.getElementByUsername(username);
+		
+		if(customer==null)
+			throw new DatabaseConnectionFailedException();
+		else if(customer.getUsername()==null)
+			throw new UserNotFoundException();
+		
+		Renderer.renderCustomer(customer);
+		
+		}catch (DatabaseConnectionFailedException e) {
+			System.out.println(e.getMessage());
+		}catch(InputMismatchException e) {
+			System.out.println("Input data does not correspond to fields");
+		}
+		catch (UserNotFoundException e) {
 			System.out.println(e.getMessage());
 		} 
 		catch (Exception e) {

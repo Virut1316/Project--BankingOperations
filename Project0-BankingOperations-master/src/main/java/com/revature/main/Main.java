@@ -32,6 +32,8 @@ public class Main {
         		break;
         	case 4:
         		finish=true;
+        		employee = null;
+        		customer = null;
         		break;
         	default:
         		System.out.println("\nPlease select a valid option, pick the number of the option you want to choose");
@@ -82,19 +84,22 @@ public class Main {
 
         			switch (OptionInput.choiceCatcher()) {
 					case 1:
-						EmployeeService.ApproveAccount();
+						EmployeeService.ApproveDenyAccount();
 						break;
 					
 					case 2:
 						EmployeeService.viewAccount();
 						break;
 					case 3:
-						EmployeeService.viewAllActiveAccounts();
+						EmployeeService.viewCustomer();
 						break;
 					case 4:
-						EmployeeService.viewAllInactiveAccounts();
+						EmployeeService.viewAllActiveAccounts();
 						break;
 					case 5:
+						EmployeeService.viewAllInactiveAccounts();
+						break;
+					case 6:
 						finish = true;
 						employee =null;
 						break;
@@ -113,30 +118,33 @@ public class Main {
 
         			switch (OptionInput.choiceCatcher()) {
 					case 1:
-						EmployeeService.ApproveAccount();
+						EmployeeService.ApproveDenyAccount();
 						break;
 					case 2:
 						EmployeeService.viewAccount();
 						break;
 					case 3:
-						EmployeeService.viewAllActiveAccounts();
+						EmployeeService.viewCustomer();
 						break;
 					case 4:
-						EmployeeService.viewAllInactiveAccounts();
+						EmployeeService.viewAllActiveAccounts();
 						break;
 					case 5:
-						EmployeeService.adminWithdraw();
+						EmployeeService.viewAllInactiveAccounts();
 						break;
 					case 6:
-						EmployeeService.adminDeposit();
+						EmployeeService.adminWithdraw();
 						break;
 					case 7:
-						EmployeeService.adminTransfer();
+						EmployeeService.adminDeposit();
 						break;
 					case 8:
-						EmployeeService.adminCancel();
+						EmployeeService.adminTransfer();
 						break;
 					case 9:
+						EmployeeService.adminCancel();
+						break;
+					case 10:
 						finish = true;
 						employee =null;
 						break;

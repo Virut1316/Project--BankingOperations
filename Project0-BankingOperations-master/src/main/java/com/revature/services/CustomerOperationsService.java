@@ -288,12 +288,15 @@ public static void DepositToAccount(int idCustomer) {
 			System.out.print("Proceed? (Y/n): ");
 			choice = sc.next();
 			
-			if(choice.equals("Y")||choice.equals("y"))
+			if(choice.equals("Y")||choice.equals("y")) {
 				success = accountDao.insertAccount(new Account(0,false,0), idCustomer);
+				if(success)System.out.println("Application for new account successful");
+				else System.out.println("Application for new account failed");
+			}
 			else
 				System.out.println("Operation cancelled");
 			
-			success=true;
+			
 			
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
@@ -311,10 +314,7 @@ public static void DepositToAccount(int idCustomer) {
 			
 		}
 		
-		if(success)
-			System.out.println("Application for new account successful");		
-		else
-			System.out.println("Application for new account failed");
+
 		
 		Renderer.waitForInput();
 
