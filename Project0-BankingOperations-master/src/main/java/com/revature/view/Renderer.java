@@ -26,7 +26,8 @@ public class Renderer {
 		System.out.println("\n2.Withdraw");
 		System.out.println("\n3.Deposit");
 		System.out.println("\n4.Transfer");
-		System.out.println("\n\n5.Exit\n");
+		System.out.println("\n5.Apply for new account");
+		System.out.println("\n\n6.Exit\n");
 		 
 	}
 	public static void renderEmployeeMenu() {

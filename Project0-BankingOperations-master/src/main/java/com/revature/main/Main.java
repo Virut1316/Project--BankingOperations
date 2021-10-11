@@ -59,7 +59,10 @@ public class Main {
 					case 4:
 						CustomerOperationsService.transferToAccount(customer.getId());
 						break;
-					case 5:
+		        	case 5:
+		        		CustomerOperationsService.ApplyForAccount(customer.getId());
+		        		break;
+					case 6:
 						finish=true;
 		        		customer = null;
 						break;

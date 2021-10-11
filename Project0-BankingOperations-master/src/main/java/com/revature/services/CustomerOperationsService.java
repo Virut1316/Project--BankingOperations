@@ -6,6 +6,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.revature.dao.AccountDao;
+import com.revature.exceptions.AccountAlreadyActiveException;
+import com.revature.exceptions.AccountAlreadyInProgress;
 import com.revature.exceptions.AccountDoesNotExistsException;
 import com.revature.exceptions.AccountNotActiveException;
 import com.revature.exceptions.ActiveAccountsNotAvailableException;
@@ -267,6 +269,57 @@ public static void DepositToAccount(int idCustomer) {
 
 	}
 	
+	public static void ApplyForAccount(int idCustomer) {
+		
+		AccountDao accountDao = new AccountDao();
+		sc = new Scanner(System.in);
+		String choice; 
+		boolean success =false;
+		try {
+			ArrayList<Account> inactiveAccounts = (ArrayList<Account>) accountDao.getAllInactiveAccounts(idCustomer);
+			if(inactiveAccounts.size()==1) {
+				System.out.println("\nAccount already in progress");
+				Renderer.renderAccount(inactiveAccounts.get(0));
+				throw new AccountAlreadyInProgress();
+			}
+
+			
+			System.out.println("You want to apply to open a new Account? You'll have to wait until an employee approves it for you");
+			System.out.print("Proceed? (Y/n): ");
+			choice = sc.next();
+			
+			if(choice.equals("Y")||choice.equals("y"))
+				success = accountDao.insertAccount(new Account(0,false,0), idCustomer);
+			else
+				System.out.println("Operation cancelled");
+			
+			success=true;
+			
+		}catch(DatabaseConnectionFailedException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(AccountAlreadyActiveException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(AccountDoesNotExistsException e) {
+			System.out.println(e.getMessage());
+		}
+		catch(AccountAlreadyInProgress e) {
+			System.out.println(e.getMessage());
+		}
+		catch(Exception e) {
+			
+		}
+		
+		if(success)
+			System.out.println("Application for new account successful");		
+		else
+			System.out.println("Application for new account failed");
+		
+		Renderer.waitForInput();
+
+	}
+
 	private static int formatMoney(String money) throws IncorrectMoneyFormatException{
 		int moneyInt=0;
 		try {

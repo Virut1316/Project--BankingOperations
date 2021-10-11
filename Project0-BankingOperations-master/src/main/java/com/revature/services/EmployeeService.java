@@ -383,12 +383,10 @@ public static void ApproveAccount() {
 		if(choice.equals("Y")||choice.equals("y"))
 		{	
 			if(accountDeleter) {
-				System.out.println("Account deleter");
 				success = accountDao.deleteAccount(accountId);	
 				success = customerDao.deleteElement(owner.getId());
 			}
 			else {
-				System.out.println("no Account deleter");
 				success = accountDao.deleteAccount(accountId);	
 
 			}
