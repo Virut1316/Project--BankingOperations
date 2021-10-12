@@ -5,9 +5,11 @@ import java.util.Scanner;
 
 import com.revature.dao.CustomerDao;
 import com.revature.dao.EmployeeDao;
+import com.revature.exceptions.AccountNotActiveException;
 import com.revature.exceptions.DatabaseConnectionFailedException;
 import com.revature.exceptions.IncorrectPasswordException;
 import com.revature.exceptions.UserNotFoundException;
+import com.revature.logger.LoggerManager;
 import com.revature.model.Customer;
 import com.revature.model.Employee;
 import com.revature.view.Renderer;
@@ -36,35 +38,44 @@ public class LoginService {
 			throw new DatabaseConnectionFailedException();
 		else if (customer.getPassword()==null) {
 			throw new UserNotFoundException();
-		}	
+		}
+		else if(!CustomerOperationsService.checkActive(customer.getId())) {
+			return null;
+		}
 		else if (customer.getPassword().equals(password)) {
-			//System.out.print("\nUser logged in sucessfully");  //Print on logger attempt to log in
+			LoggerManager.logger.info("User "+customer.getUsername()+" logged in");
+
 		}
 		else
 			throw new IncorrectPasswordException();
 		}
 		catch (DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 			Renderer.waitForInput();
 			customer = null;
 		}
 		catch (UserNotFoundException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 			Renderer.waitForInput();
 			customer = null;
 		}
 		catch (IncorrectPasswordException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.warn(e.getMessage());
 			Renderer.waitForInput();
 			customer = null;
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn(e.getMessage());
+
 			Renderer.waitForInput();
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
-			//e.printStackTrace(); Logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 			Renderer.waitForInput();
 			customer = null;
 		}
@@ -95,33 +106,37 @@ public class LoginService {
 			throw new UserNotFoundException();
 		}	
 		else if (employee.getPassword().equals(password)) {
-			//System.out.print("\nUser logged in sucessfully");  //Print on logger attempt to log in
+			LoggerManager.logger.info("User "+employee.getUsername()+" logged in");
 		}
 		else
 			throw new IncorrectPasswordException();
 		}
 		catch (DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 			Renderer.waitForInput();
 			employee = null;
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn("User tried to input not valid data : "+e.getMessage());
 			Renderer.waitForInput();
 		}
 		catch (UserNotFoundException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 			Renderer.waitForInput();
 			employee = null;
 		}
 		catch (IncorrectPasswordException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 			Renderer.waitForInput();
 			employee = null;
 		}
 		catch (Exception e) {
-			System.out.println(e.getMessage());
-			//e.printStackTrace(); Logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 			Renderer.waitForInput();
 			employee = null;
 		}

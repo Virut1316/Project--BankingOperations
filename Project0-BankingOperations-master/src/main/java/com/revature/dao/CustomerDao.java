@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.revature.daoUtils.ConnectionConfig;
 import com.revature.daoUtils.Dao;
+import com.revature.logger.LoggerManager;
 import com.revature.model.Customer;
 
 public class CustomerDao implements Dao<Customer> {
@@ -15,7 +16,7 @@ public class CustomerDao implements Dao<Customer> {
 	
 	@Override
 	public List<Customer> getAllElements() {
-		// TODO Auto-generated method stub
+		//Not used in this version
 		return null;
 	}
 
@@ -37,10 +38,10 @@ public class CustomerDao implements Dao<Customer> {
 				customer = new Customer(rs.getInt(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5),rs.getString(6));
 			}
 			connection.close();
-			
+			LoggerManager.logger.debug(preparedStatement.toString());
 		}catch(Exception e){
 			customer=null;
-			System.out.println(e);
+			LoggerManager.logger.error(e.getMessage());
 		}
 		
 		return customer;
@@ -69,9 +70,11 @@ public class CustomerDao implements Dao<Customer> {
 				customer = new Customer();
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedStatement.toString());
+
 		}catch(Exception e){
 			customer=null;
-			System.out.println(e);
+			LoggerManager.logger.error(e.getMessage());
 		}
 		
 		return customer;
@@ -97,9 +100,10 @@ public class CustomerDao implements Dao<Customer> {
 			preparedStatement.execute();
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedStatement.toString());
+
 		} catch (Exception e) {
-			System.out.println("Problem reaching database, try again later");
-			//System.out.println(e); logger
+			LoggerManager.logger.error(e.getMessage());
 			success = false;
 		}
 		
@@ -122,9 +126,10 @@ public class CustomerDao implements Dao<Customer> {
 			preparedStatement.executeUpdate();
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedStatement.toString());
+
 		} catch (Exception e) {
-			System.out.println("Problem reaching database, try again later");
-			//System.out.println(e); logger
+			LoggerManager.logger.error(e.getMessage());
 			success = false;
 		}
 		
@@ -134,7 +139,7 @@ public class CustomerDao implements Dao<Customer> {
 
 	@Override
 	public boolean updateElement(Customer element) {
-		// TODO Auto-generated method stub
+		//Not used in this version
 		return false;
 	}
 	

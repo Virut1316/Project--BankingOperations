@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.revature.daoUtils.AccountDaoInterface;
 import com.revature.daoUtils.ConnectionConfig;
+import com.revature.logger.LoggerManager;
 
 public class AccountDao implements AccountDaoInterface{
 
@@ -29,14 +30,14 @@ public class AccountDao implements AccountDaoInterface{
 			Statement statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
 			
-			
 			while(rs.next())
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
 			connection.close();
+			LoggerManager.logger.debug(sql);
 			
 		} catch (Exception e) {
-			// print in logger
+			LoggerManager.logger.error(e.getMessage());
 			accounts = null;
 		}
 		
@@ -63,8 +64,9 @@ public class AccountDao implements AccountDaoInterface{
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedstatement.toString());
 		} catch (Exception e) {
-			// print in logger
+			LoggerManager.logger.error(e.getMessage());
 			accounts = null;
 		}
 		
@@ -89,9 +91,9 @@ public class AccountDao implements AccountDaoInterface{
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
 			connection.close();
+			LoggerManager.logger.debug(sql);
 		} catch (Exception e) {
-			System.out.println(e);// print in logger
-			e.printStackTrace();
+			LoggerManager.logger.error(e.getMessage());
 			accounts = null;
 		}
 		
@@ -115,9 +117,9 @@ public class AccountDao implements AccountDaoInterface{
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
 			connection.close();
+			LoggerManager.logger.debug(sql);
 		} catch (Exception e) {
-			System.out.println(e);// print in logger
-			e.printStackTrace();
+			LoggerManager.logger.error(e.getMessage());
 			accounts = null;
 		}
 		
@@ -143,9 +145,10 @@ public class AccountDao implements AccountDaoInterface{
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedstatement.toString());
+
 		} catch (Exception e) {
-			System.out.println(e);// print in logger
-			e.printStackTrace();
+			LoggerManager.logger.error(e.getMessage());
 			accounts = null;
 		}
 		
@@ -170,8 +173,10 @@ public class AccountDao implements AccountDaoInterface{
 				accounts.add(new Account(rs.getInt(1),rs.getBoolean(3),rs.getInt(4)));
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedstatement.toString());
+
 		} catch (Exception e) {
-			// print in logger
+			LoggerManager.logger.error(e.getMessage());
 			accounts = null;
 		}
 		
@@ -192,8 +197,10 @@ public class AccountDao implements AccountDaoInterface{
 			preparedstatement.executeUpdate();			
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedstatement.toString());
+
 		} catch (Exception e) {
-			// print in logger
+			LoggerManager.logger.error(e.getMessage());
 			successfull = false;
 		}
 		
@@ -213,11 +220,13 @@ public class AccountDao implements AccountDaoInterface{
 			preparedstatement.setBoolean(2, account.isActive());
 			preparedstatement.setInt(3, account.getBalance());
 			
-			preparedstatement.executeQuery();			
+			preparedstatement.executeUpdate();			
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedstatement.toString());
+
 		} catch (Exception e) {
-			// print in logger
+			LoggerManager.logger.error(e.getMessage());
 			successfull = false;
 		}
 		return successfull;
@@ -236,12 +245,13 @@ public class AccountDao implements AccountDaoInterface{
 			preparedStatement.setInt(2, account.getBalance());
 			preparedStatement.setInt(3, account.getAccountNumber());
 			
-			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();			
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedStatement.toString());
+
 		} catch (Exception e) {
-			e.printStackTrace();// print in logger
+			LoggerManager.logger.error(e.getMessage());
 			successfull = false;
 		}
 		return successfull;
@@ -266,8 +276,10 @@ public class AccountDao implements AccountDaoInterface{
 				customer = new Customer(rs.getInt(2),rs.getString(6),rs.getString(7),rs.getString(8),rs.getString(9),rs.getString(10));
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedStatement.toString());
+
 		} catch (Exception e) {
-			// print in logger
+			LoggerManager.logger.error(e.getMessage());
 			customer = null;
 		}
 		return customer;
@@ -293,8 +305,10 @@ public class AccountDao implements AccountDaoInterface{
 				account = new Account();
 			
 			connection.close();
+			LoggerManager.logger.debug(preparedStatement.toString());
+
 		}catch(Exception e){
-			//logger
+			LoggerManager.logger.error(e.getMessage());
 			account = null;
 		}
 		
@@ -323,36 +337,16 @@ public class AccountDao implements AccountDaoInterface{
 			
 			
 			connection.close();
+			
+			LoggerManager.logger.debug(preparedStatement.toString());
+
 		}catch(Exception e){
-			//logger
+			LoggerManager.logger.error(e.getMessage());
 			account = null;
 		}
 		
 		return account;
 	}
-	
-	
-	/*public boolean transfer(Account sender, Account receiver) {
-		boolean success;
-		try {
-			Connection connection = connectionConfig.getConnection();
-			connection.setAutoCommit(false); //Set this to disable commits to the database until called
-			updateAccount(sender);
-			Renderer.waitForInput();
-			updateAccount(receiver);
-			connection.commit(); // we call a commit so all the changes are "saved" on the DB
-			connection.setAutoCommit(true); //we leave the autocommit in true to not affect other functionalities
-			
-			success = true;
-			
-		}catch(Exception e) {
-			success = false;
-		}
-		
-		
-		return success;
-	}*/
-	
 	
 	public boolean transfer(Account sender, Account receiver) {
 		boolean successfull = true;
@@ -369,9 +363,8 @@ public class AccountDao implements AccountDaoInterface{
 			preparedStatement.setInt(2, sender.getBalance());
 			preparedStatement.setInt(3, sender.getAccountNumber());
 			
-			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();			
-			Renderer.waitForInput();
+			LoggerManager.logger.debug(preparedStatement.toString());
 
 			//Second parte adding to receiver
 			
@@ -380,16 +373,15 @@ public class AccountDao implements AccountDaoInterface{
 			preparedStatement2.setInt(2, receiver.getBalance());
 			preparedStatement2.setInt(3, receiver.getAccountNumber());
 			
-			System.out.println(preparedStatement2);
 			preparedStatement2.executeUpdate();	
-			Renderer.waitForInput();
+			LoggerManager.logger.debug(preparedStatement2.toString());
 
 			connection.commit(); // Commit to apply changes
 			connection.setAutoCommit(true); //going back to the default mode
 			
 			connection.close();
 		} catch (Exception e) {
-			e.printStackTrace();// print in logger
+			LoggerManager.logger.error(e.getMessage());
 			successfull = false;
 		}
 		return successfull;

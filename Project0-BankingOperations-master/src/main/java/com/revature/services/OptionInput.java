@@ -3,6 +3,7 @@ package com.revature.services;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.revature.logger.LoggerManager;
 import com.revature.view.Renderer;
 
 public class OptionInput {
@@ -17,9 +18,10 @@ public class OptionInput {
 			System.out.print("Your selection: ");
 			choice = sc.nextInt();
 		}catch (InputMismatchException e) {
+			LoggerManager.logger.warn("User tried to input not valid data : "+e.getMessage());
 			choice = 0;
 		}catch (Exception e) {
-			//e.getStackTrace(); logger
+			LoggerManager.logger.warn(e.getMessage());
 			choice = 0;
 		}
 

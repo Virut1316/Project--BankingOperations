@@ -1,6 +1,5 @@
 package com.revature.services;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -15,8 +14,8 @@ import com.revature.exceptions.DatabaseConnectionFailedException;
 import com.revature.exceptions.IncorrectMoneyFormatException;
 import com.revature.exceptions.NotEnoughFoundsException;
 import com.revature.exceptions.TargetAccountNotAvailableException;
+import com.revature.logger.LoggerManager;
 import com.revature.model.Account;
-import com.revature.model.Customer;
 import com.revature.view.Renderer;
 
 public class CustomerOperationsService {
@@ -36,16 +35,19 @@ public class CustomerOperationsService {
 			
 		}catch (DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 			active = false;
 			Renderer.waitForInput();
 		}
 		catch (AccountNotActiveException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 			active = false;
 			Renderer.waitForInput();
 		}
 		catch (Exception e) {
-			// System.out.println(e.getMessage()); logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 			active = false;
 			Renderer.waitForInput();
 		}
@@ -73,12 +75,16 @@ public class CustomerOperationsService {
 		
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}
 		catch(ActiveAccountsNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
+
 		}
 		catch(Exception e) {
-			//logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		Renderer.waitForInput();
 
@@ -113,27 +119,39 @@ public class CustomerOperationsService {
 			
 		if(success) {
 			System.out.println("Operation successful");
+			LoggerManager.logger.info("Withdraw successful, from "+ account.getAccountNumber());
+
 		}
-		else
+		else {
 			System.out.println("Operation failed, please try again later");
+			LoggerManager.logger.info("Withdraw failed, from "+ account.getAccountNumber());
+
+		}
 		
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch(AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(TargetAccountNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(NotEnoughFoundsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn("User tried to input not valid data : "+e.getMessage());
 		}
 		catch(Exception e) {
-			//System.out.println(e.getMessage());//logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		
 		Renderer.waitForInput();
@@ -155,6 +173,7 @@ public class CustomerOperationsService {
 		
 		if(idSenderAccount==idReceiverAccount) {
 			System.out.println("You cant send money to the same account");
+			LoggerManager.logger.info("User tried to send money to the same account");
 			Renderer.waitForInput();
 			return;
 		}
@@ -189,28 +208,38 @@ public class CustomerOperationsService {
 			
 		if(success) {
 			System.out.println("Operation successful");
+			LoggerManager.logger.info("Transfer successful from "+senderAccount.getAccountNumber()+" to "+receiverAccount.getAccountNumber());
 		}
-		else
+		else {
 			System.out.println("Operation failed, please try again later");
+			LoggerManager.logger.info("Transfer failed from"+senderAccount.getAccountNumber()+" to "+receiverAccount.getAccountNumber());
+		}
 
 			
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch(AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(TargetAccountNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(NotEnoughFoundsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		catch(Exception e) {
-			//System.out.println(e.getMessage());//logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		
 		Renderer.waitForInput();
@@ -241,28 +270,34 @@ public static void DepositToAccount(int idCustomer) {
 			
 		if(success) {
 			System.out.println("Operation successful");
+			LoggerManager.logger.info("Deposit successful to "+idAccount);	
 		}
-		else
+		else {
 			System.out.println("Operation failed, please try again later");
+			LoggerManager.logger.info("Deposit failed to "+idAccount);
+		}
 
 			
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch(AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(TargetAccountNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
 			System.out.println(e.getMessage());
-		}
-		catch(NotEnoughFoundsException e) {
-			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		catch(Exception e) {
-			//System.out.println(e.getMessage());//logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		
 		Renderer.waitForInput();
@@ -290,31 +325,43 @@ public static void DepositToAccount(int idCustomer) {
 			
 			if(choice.equals("Y")||choice.equals("y")) {
 				success = accountDao.insertAccount(new Account(0,false,0), idCustomer);
-				if(success)System.out.println("Application for new account successful");
-				else System.out.println("Application for new account failed");
+				if(success) {
+					System.out.println("Application for new account successful");
+					LoggerManager.logger.info("Userid:"+idCustomer+" applied for a new account");
+				}
+				else {
+					System.out.println("Application for new account failed");
+					LoggerManager.logger.info("Account application failed for "+idCustomer);
+				}
 			}
-			else
+			else {
 				System.out.println("Operation cancelled");
+				LoggerManager.logger.info("Account application was canceled");
+			}
+				
 			
 			
 			
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}
 		catch(AccountAlreadyActiveException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info("Account application failed");
 		}
 		catch(AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info("Account application failed");
 		}
 		catch(AccountAlreadyInProgress e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info("Account application failed");
 		}
 		catch(Exception e) {
-			
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
-		
-
 		
 		Renderer.waitForInput();
 
@@ -331,12 +378,12 @@ public static void DepositToAccount(int idCustomer) {
 			
 		}catch (IncorrectMoneyFormatException e) {
 			moneyInt = -1;
+			LoggerManager.logger.info("Money format was inputted incorrectly");
 			throw new IncorrectMoneyFormatException();
 			
 		}
 		catch (Exception e) {
-			//e.printStackTrace();
-			//System.out.println(e.getMessage());	//logger
+			LoggerManager.logger.warn("A problem occurred while reading money format");
 			moneyInt = -1;
 			throw new IncorrectMoneyFormatException();
 			

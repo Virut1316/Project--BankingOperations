@@ -14,6 +14,7 @@ import com.revature.exceptions.IncorrectMoneyFormatException;
 import com.revature.exceptions.NotEnoughFoundsException;
 import com.revature.exceptions.TargetAccountNotAvailableException;
 import com.revature.exceptions.UserNotFoundException;
+import com.revature.logger.LoggerManager;
 import com.revature.model.Account;
 import com.revature.model.Customer;
 import com.revature.view.Renderer;
@@ -24,7 +25,8 @@ public class EmployeeService {
 	
 public static void ApproveDenyAccount() {
 		
-		AccountDao accounDao = new AccountDao();
+		AccountDao accountDao = new AccountDao();
+		CustomerDao customerDao = new CustomerDao();
 		sc = new Scanner(System.in);
 		String choice;
 		
@@ -33,7 +35,7 @@ public static void ApproveDenyAccount() {
 		System.out.print("Account number to approve or deny: ");
 		int accountId = sc.nextInt();
 			
-		Account account = accounDao.getAccount(accountId);
+		Account account = accountDao.getAccount(accountId);
 
 		if(account==null)
 			throw new DatabaseConnectionFailedException();
@@ -48,6 +50,8 @@ public static void ApproveDenyAccount() {
 		choice = sc.next();
 		choice = choice.trim();
 		
+		Customer owner =accountDao.getOwner(accountId);
+		boolean accountDeleter = (accountDao.getAllAccounts(owner.getId()).size())<=1;//if it is the last account of the customer the account gets deleted too
 		
 		if(choice.equals("A")||choice.equals("a")) {
 			System.out.println("This account is going to be activated ");
@@ -56,21 +60,34 @@ public static void ApproveDenyAccount() {
 			choice = choice.trim();
 			
 			if(choice.equals("Y")||choice.equals("y")) {
-				accounDao.updateAccount(new Account(account.getAccountNumber(),true,account.getBalance()));
+				accountDao.updateAccount(new Account(account.getAccountNumber(),true,account.getBalance()));
 				System.out.println("Account successfully approved");
+				LoggerManager.logger.info("Account "+account.getAccountNumber()+" was approved");
 			}
-			else 
+			else {
 				System.out.println("Operation cancelled");
+			}
+
 		}else if (choice.equals("D")||choice.equals("d")) {
 			System.out.println("This account is going to be denied ");
 			System.out.print("Proceed? (Y/n): ");
 			choice = sc.next();
 			choice = choice.trim();
 			if(choice.equals("Y")||choice.equals("y")) {
-				accounDao.deleteAccount(account.getAccountNumber());
-				System.out.println("Account successfully denied");
+				
+				if(!accountDeleter) {
+					accountDao.deleteAccount(account.getAccountNumber());
+					System.out.println("Account successfully denied");
+					LoggerManager.logger.info("Account "+account.getAccountNumber()+" was denied");
+				}else {
+					accountDao.deleteAccount(account.getAccountNumber());
+					customerDao.deleteElement(owner.getId());
+					System.out.println("Account successfully denied");
+					LoggerManager.logger.info("Account "+account.getAccountNumber()+" was denied");
+				}
+
 			}
-			else 
+			else
 				System.out.println("Operation cancelled");
 		}
 		else
@@ -80,17 +97,21 @@ public static void ApproveDenyAccount() {
 		
 		}catch (DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch (AccountAlreadyActiveException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn("User tried to input not valid data : "+e.getMessage());
 		}
 		catch (AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		} 
 		catch (Exception e) {
-			System.out.println(e.getMessage());
-			//e.getStackTrace() logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		Renderer.waitForInput();
 		
@@ -117,15 +138,18 @@ public static void ApproveDenyAccount() {
 		
 		}catch (DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn("User tried to input not valid data : "+e.getMessage());
 		}
 		catch (AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		} 
 		catch (Exception e) {
-			System.out.println(e.getMessage());
-			//e.getStackTrace() logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		Renderer.waitForInput();
 		
@@ -150,16 +174,19 @@ public static void ApproveDenyAccount() {
 		Renderer.renderCustomer(customer);
 		
 		}catch (DatabaseConnectionFailedException e) {
+			LoggerManager.logger.error(e.getMessage());
 			System.out.println(e.getMessage());
 		}catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn("User tried to input not valid data : "+e.getMessage());
 		}
 		catch (UserNotFoundException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		} 
 		catch (Exception e) {
-			System.out.println(e.getMessage());
-			//e.getStackTrace() logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		Renderer.waitForInput();
 		
@@ -184,12 +211,14 @@ public static void ApproveDenyAccount() {
 
 		}catch (DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch (ActiveAccountsNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		} 
 		catch (Exception e) {
-			System.out.println(e.getMessage());
-			//e.getStackTrace() logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		Renderer.waitForInput();
 		
@@ -209,19 +238,17 @@ public static void ApproveDenyAccount() {
 			
 			for(Account account: accounts) {
 				Renderer.renderAccount(account);
-			}
-			
-			
-			
+			}	
 		}catch (DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch (ActiveAccountsNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			//e.getStackTrace() logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		Renderer.waitForInput();
 		
@@ -257,29 +284,39 @@ public static void ApproveDenyAccount() {
 			
 		if(success) {
 			System.out.println("Operation successful");
+			LoggerManager.logger.info("Withdraw successful, from "+ account.getAccountNumber());
 		}
-		else
+		else {
 			System.out.println("Operation failed, please try again later");
-
+			LoggerManager.logger.info("Withdraw failed, from "+ account.getAccountNumber());
+		}
 			
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch(AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(TargetAccountNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(NotEnoughFoundsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn("User tried to input not valid data : "+e.getMessage());
 		}
 		catch(Exception e) {
-			//System.out.println(e.getMessage());//logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
+		
 		
 		Renderer.waitForInput();
 		
@@ -305,30 +342,35 @@ public static void ApproveDenyAccount() {
 		
 			success = accountDao.updateAccount(new Account(idAccount, account.isActive(), account.getBalance()+moneyInt));
 			
-		if(success) {
-			System.out.println("Operation successful");
-		}
-		else
-			System.out.println("Operation failed, please try again later");
-
+			if(success) {
+				System.out.println("Operation successful");
+				LoggerManager.logger.info("Deposit successful to "+idAccount);	
+			}
+			else {
+				System.out.println("Operation failed, please try again later");
+				LoggerManager.logger.info("Deposit failed to "+idAccount);
+			}
 			
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch(AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(TargetAccountNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
 			System.out.println(e.getMessage());
-		}
-		catch(NotEnoughFoundsException e) {
-			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		catch(Exception e) {
-			//System.out.println(e.getMessage());//logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		
 		Renderer.waitForInput();
@@ -348,6 +390,7 @@ public static void ApproveDenyAccount() {
 		
 		if(idSenderAccount==idReceiverAccount) {
 			System.out.println("You cant send money to the same account");
+			LoggerManager.logger.info("Employee tried to send money to the same account");
 			Renderer.waitForInput();
 			return;
 		}
@@ -381,28 +424,37 @@ public static void ApproveDenyAccount() {
 			
 		if(success) {
 			System.out.println("Operation successful");
+			LoggerManager.logger.info("Transfer successful from "+senderAccount.getAccountNumber()+" to "+receiverAccount.getAccountNumber());
 		}
-		else
+		else {
 			System.out.println("Operation failed, please try again later");
-
+			LoggerManager.logger.info("Transfer failed from"+senderAccount.getAccountNumber()+" to "+receiverAccount.getAccountNumber());
+		}
 			
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch(AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(TargetAccountNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(IncorrectMoneyFormatException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(NotEnoughFoundsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}
 		catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		catch(Exception e) {
-			//System.out.println(e.getMessage());//logger
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		
 		Renderer.waitForInput();
@@ -445,10 +497,11 @@ public static void ApproveDenyAccount() {
 			if(accountDeleter) {
 				success = accountDao.deleteAccount(accountId);	
 				success = customerDao.deleteElement(owner.getId());
+				LoggerManager.logger.info("Called delete account "+accountId +" with user "+owner.getId());
 			}
 			else {
 				success = accountDao.deleteAccount(accountId);	
-
+				LoggerManager.logger.info("Called delete account "+accountId );
 			}
 
 		}
@@ -460,23 +513,31 @@ public static void ApproveDenyAccount() {
 			
 		if(success) {
 			System.out.println("Operation successful");
+			LoggerManager.logger.info("Delete successful");
 		}
-		else
+		else {
 			System.out.println("Operation failed, please try again later");
+			LoggerManager.logger.info("Delete failed");
+		}
 
 			
 		}catch(DatabaseConnectionFailedException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.error(e.getMessage());
 		}catch(AccountDoesNotExistsException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(TargetAccountNotAvailableException e) {
 			System.out.println(e.getMessage());
+			LoggerManager.logger.info(e.getMessage());
 		}catch(InputMismatchException e) {
 			System.out.println("Input data does not correspond to fields");
+			LoggerManager.logger.warn(e.getMessage());
 		}
 		catch(Exception e) {
-			//System.out.println(e.getMessage());//logger
-		}
+			System.out.print("A problem has ocurred, try again later");
+			LoggerManager.logger.warn(e.getMessage());		
+			}
 		
 		Renderer.waitForInput();
 	}
@@ -492,12 +553,12 @@ public static void ApproveDenyAccount() {
 			
 		}catch (IncorrectMoneyFormatException e) {
 			moneyInt = -1;
+			LoggerManager.logger.info("Money format was inputted incorrectly");
 			throw new IncorrectMoneyFormatException();
 			
 		}
 		catch (Exception e) {
-			//e.printStackTrace();
-			//System.out.println(e.getMessage());	//logger
+			LoggerManager.logger.warn("A problem occurred while reading money format");
 			moneyInt = -1;
 			throw new IncorrectMoneyFormatException();
 			

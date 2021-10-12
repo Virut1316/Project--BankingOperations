@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.revature.daoUtils.ConnectionConfig;
 import com.revature.daoUtils.Dao;
+import com.revature.logger.LoggerManager;
 import com.revature.model.Employee;
 
 import java.sql.Connection;
@@ -22,7 +23,7 @@ public class EmployeeDao implements Dao<Employee>{
 		List<Employee> employeeLs = new ArrayList<Employee>(); 
 		
 		try {
-		//We get the connection to de db
+		//We get the connection to the db
 		Connection connection = connectionConfig.getConnection();
 		
 		//Create the Query
@@ -36,9 +37,12 @@ public class EmployeeDao implements Dao<Employee>{
 			employeeLs.add(new Employee(rs.getInt(1),rs.getBoolean(2),rs.getString(3),rs.getString(4)));
 		}
 		connection.close();
+		LoggerManager.logger.debug(sql);
+		
 		}
 		catch (Exception e) {
-			//e.printStackTrace(); we need to print this in the logger
+			LoggerManager.logger.error(e.getMessage());
+			employeeLs = null;
 		}
 		
 		return employeeLs;
@@ -67,9 +71,11 @@ public class EmployeeDao implements Dao<Employee>{
 		if(employee==null) //if it does not retrieve anything then an empty employee is returned
 			employee = new Employee();
 		connection.close();
+		LoggerManager.logger.debug(preparedStatement.toString());
+
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			LoggerManager.logger.error(e.getMessage());
 			employee = null; //if an exception takes place during execution then a null employee is returned
 		}
 		
@@ -101,10 +107,11 @@ public class EmployeeDao implements Dao<Employee>{
 			employee = new Employee();
 		
 		connection.close();
-		
+		LoggerManager.logger.debug(preparedStatement.toString());
+
 		}
 		catch(Exception e) {
-			e.printStackTrace(); //Need to send this to the loger
+			LoggerManager.logger.error(e.getMessage());
 			employee = null;
 		}
 
@@ -115,20 +122,20 @@ public class EmployeeDao implements Dao<Employee>{
 	
 	@Override
 	public boolean insertElement(Employee element) {
-		// TODO Auto-generated method stub
+		// Not used in this version
 		return false;
 	}
 
 	@Override
 	public boolean deleteElement(int id) {
 		
-		//Not necesary to implement at this project
+		// Not used in this version
 		return false;
 	}
 
 	@Override
 	public boolean updateElement(Employee element) {
-		//Not necesary to implement at this project
+		// Not used in this version
 		return false;
 	}
 
