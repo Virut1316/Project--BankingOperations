@@ -27,7 +27,6 @@ public class CustomerOperationsService {
 		
 		try {
 			ArrayList<Account> activeAccounts = (ArrayList<Account>) accounDao.getAllActiveAccounts(idCustomer);
-			
 			if(activeAccounts==null)
 				throw new DatabaseConnectionFailedException();
 			else if(activeAccounts.size()==0)

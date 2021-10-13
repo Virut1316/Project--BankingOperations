@@ -10,7 +10,7 @@ public class OptionInput {
 	private static Scanner sc;
 	
 
-	public static int choiceCatcher() {
+	public static int choiceCatcher() { //Used to modularize the input in menus
 		
 		sc = new Scanner(System.in);
 		int choice;
